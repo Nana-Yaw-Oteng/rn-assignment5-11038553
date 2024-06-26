@@ -1,110 +1,82 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity,SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const HomeScreen = () => {
+const HomeScreen = ({ isDarkTheme }) => {
   return (
-    <SafeAreaView>
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Image source={require('../assets/penguin.png')} style={styles.profilePic} />
-        <View style={styles.headerText}>
-          <Text style={styles.welcomeText}>Welcome back,</Text>
-          <Text style={styles.nameText}>Nana Yaw Oteng</Text>
-        </View>
-        <Icon name="search" size={24} color="black" />
-      </View>
-      <View>
-      <Image style={styles.card} source={require('../assets/Card.png')}/>
-      </View>
-      
-        
-      <View style={styles.actions}>
-        <TouchableOpacity style={styles.actionButton}>
-            <View style={{backgroundColor:'#f2f2f2', borderRadius:40,padding:10}}>
-          <Icon name="send" size={25} color="black" />
+    <SafeAreaView style={isDarkTheme ? styles.safeAreaDark : styles.safeAreaLight}>
+      <ScrollView style={isDarkTheme ? styles.containerDark : styles.containerLight}>
+        <View style={styles.header}>
+          <Image source={require('../assets/penguin.png')} style={styles.profilePic} />
+          <View style={styles.headerText}>
+            <Text style={[{ color: '#bfbfbf', fontSize: 24 }, isDarkTheme ? styles.textDark : styles.textLight]}>Welcome back,</Text>
+            <Text style={[{ fontWeight: 'bold' }, isDarkTheme ? styles.textDark : styles.textLight]}>Nana Yaw Oteng</Text>
           </View>
-          <Text>Sent</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.actionButton}>
-           <View style={{backgroundColor:'#f2f2f2', borderRadius:40,padding:10}}>
-           <Icon  name="arrow-down" size={25} color="black" />
-           </View>
-          
-         
-          <Text>Receive</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.actionButton}>
-            <View style={{backgroundColor:'#f2f2f2', borderRadius:40,padding:10,width:45}}>
-            <Icon style={{marginLeft:5}} name="dollar" size={25} color="black" />
-            </View>
-          
-          <Text>Loan</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.actionButton}>
-            <View style={{backgroundColor:'#f2f2f2', borderRadius:40,padding:10}}>
-          <Icon name="arrow-up" size={25} color="black" />
-          </View>
-          <Text>Topup</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.transactions}>
-        <Text style={styles.transactionsTitle}>Transaction</Text>
-        <TouchableOpacity>
-          <Text style={styles.sellAll}>Sell All</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.transactionItem}>
-        <View style={{backgroundColor:'#f2f2f2', borderRadius:40,padding:8}}>
-        <Icon name="apple" size={28} color="black" />
+          <Icon name="search" size={24} color={isDarkTheme ? 'white' : 'black'} />
         </View>
-        <View style={styles.transactionDetails}>
-          <Text style={styles.transactionText}>Apple Store</Text>
-          <Text style={styles.transactionCategory}>Entertainment</Text>
+        <View>
+          <Image style={styles.card} source={require('../assets/Card.png')} />
         </View>
-        <Text style={styles.transactionAmount}>- $5.99</Text>
-      </View>
-      <View style={styles.transactionItem}>
-      <View style={{backgroundColor:'#f2f2f2', borderRadius:40,padding:8}}>
-      <Icon name="spotify" size={32} color="#33cc33" />
-          </View>
-        <View style={styles.transactionDetails}>
-          <Text style={styles.transactionText}>Spotify</Text>
-          <Text style={styles.transactionCategory}>Music</Text>
+        <View style={styles.actions}>
+          {renderActionButton('send', 'Sent', isDarkTheme)}
+          {renderActionButton('arrow-down', 'Receive', isDarkTheme)}
+          {renderActionButton('dollar', 'Loan', isDarkTheme)}
+          {renderActionButton('arrow-up', 'Topup', isDarkTheme)}
         </View>
-        <Text style={styles.transactionAmount}>- $12.99</Text>
-      </View>
-      <View style={styles.transactionItem}>
-        <View style={{backgroundColor:'#f2f2f2', borderRadius:40,padding:8}}>
-        <Icon  name="money" size={28} color="black" />
+        <View style={styles.transactions}>
+          <Text style={isDarkTheme ? styles.textDark : styles.textLight}>Transaction</Text>
+          <TouchableOpacity>
+            <Text style={styles.sellAll}>Sell All</Text>
+          </TouchableOpacity>
         </View>
-        <View style={styles.transactionDetails}>
-          <Text style={styles.transactionText}>Money Transfer</Text>
-          <Text style={styles.transactionCategory}>Transaction</Text>
-        </View>
-        <Text style={{fontSize: 16,fontWeight: 'bold',color:'#4d79ff'}}>$300</Text>
-      </View>
-      <View style={styles.transactionItem}>
-        <View style={{backgroundColor:'#f2f2f2', borderRadius:40,padding:8}}>
-        <Icon name="shopping-cart" size={28} color="#ff4d4d" />
-        </View>
-        <View style={styles.transactionDetails}>
-          <Text style={styles.transactionText}>Grocery</Text>
-          <Text style={styles.transactionCategory}>Transaction</Text>
-        </View>
-        <Text style={styles.transactionAmount}>- $88</Text>
-      </View>
-    </ScrollView>
+        {renderTransactionItem('apple', 'Apple Store', 'Entertainment', '- $5.99', isDarkTheme)}
+        {renderTransactionItem('spotify', 'Spotify', 'Music', '- $12.99', isDarkTheme, '#33cc33')}
+        {renderTransactionItem('money', 'Money Transfer', 'Transaction', '$300', isDarkTheme, '#4d79ff', true)}
+        {renderTransactionItem('shopping-cart', 'Grocery', 'Transaction', '- $88', isDarkTheme, '#ff4d4d')}
+      </ScrollView>
     </SafeAreaView>
   );
 };
 
-export default HomeScreen;
+const renderActionButton = (iconName, label, isDarkTheme) => (
+  <TouchableOpacity style={styles.actionButton}>
+    <View style={[styles.iconContainer, isDarkTheme && styles.iconContainerDark]}>
+      <Icon name={iconName} size={25} color={isDarkTheme ? 'white' : 'black'} />
+    </View>
+    <Text style={isDarkTheme ? styles.textDark : styles.textLight}>{label}</Text>
+  </TouchableOpacity>
+);
+
+const renderTransactionItem = (iconName, title, category, amount, isDarkTheme, iconColor = 'black', isPositive = false) => (
+  <View style={styles.transactionItem}>
+    <View style={[styles.iconContainer, isDarkTheme && styles.iconContainerDark]}>
+      <Icon name={iconName} size={28} color={iconColor} />
+    </View>
+    <View style={styles.transactionDetails}>
+      <Text style={isDarkTheme ? styles.textDark : styles.textLight}>{title}</Text>
+      <Text style={styles.transactionCategory}>{category}</Text>
+    </View>
+    <Text style={{ fontSize: 16, fontWeight: 'bold', color: isPositive ? '#4d79ff' : (isDarkTheme ? 'white' : 'black') }}>
+      {amount}
+    </Text>
+  </View>
+);
 
 const styles = StyleSheet.create({
-  container: {
-    
+  safeAreaLight: {
     backgroundColor: '#fff',
+    color: '#000'
+  },
+  safeAreaDark: {
+    flex: 1,
+    backgroundColor: '#000033',
+  },
+  containerLight: {
+    backgroundColor: '#fff',
+    padding: 20,
+  },
+  containerDark: {
+    backgroundColor: '#000033',
     padding: 20,
   },
   header: {
@@ -121,28 +93,19 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 10,
   },
-  welcomeText: {
+  textLight: {
     fontSize: 16,
-    color: 'gray',
+    color: '#000',
   },
-  nameText: {
-    fontSize: 20,
-    fontWeight: 'bold',
+  textDark: {
+    fontSize: 16,
+    color: 'white',
   },
   card: {
-    borderRadius:10,
-    marginVertical:20,
-     marginHorizontal:20,
-   
-    
+    borderRadius: 10,
+    marginVertical: 20,
+    marginHorizontal: 20,
   },
-  
-  cardDetails: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  
   actions: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -150,18 +113,21 @@ const styles = StyleSheet.create({
   },
   actionButton: {
     alignItems: 'center',
-    marginBottom:20,
-    
+    marginBottom: 20,
+  },
+  iconContainer: {
+    backgroundColor: '#f2f2f2',
+    borderRadius: 40,
+    padding: 10,
+  },
+  iconContainerDark: {
+    backgroundColor: '#001f4d',
   },
   transactions: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 10,
-  },
-  transactionsTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
   },
   sellAll: {
     color: '#4d79ff',
@@ -173,20 +139,15 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
-    marginVertical:5
+    marginVertical: 5,
   },
   transactionDetails: {
     flex: 1,
     marginLeft: 10,
   },
-  transactionText: {
-    fontSize: 16,
-  },
   transactionCategory: {
     color: 'gray',
   },
-  transactionAmount: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
 });
+
+export default HomeScreen;
